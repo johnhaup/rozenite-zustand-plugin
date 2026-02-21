@@ -2,7 +2,7 @@ export default {
   panels: [
     {
       name: 'Zustand',
-      source: './src/hello-world.tsx',
+      source: './src/index.tsx',
     },
   ],
 };

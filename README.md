@@ -2,31 +2,42 @@
 
 Inspect Zustand stores and trace actions/state in React Native DevTools.
 
-### Seeing the Zustand tab
+### Development workflow
 
-1. **Build the plugin** (from this folder):
-   ```bash
-   yarn build
-   ```
+Use **two terminals**:
 
-2. **Start the Rozenite dev server** (required so DevTools can load the panel):
-   ```bash
-   yarn dev
-   ```
-   Leave this running (default port 8888).
+**Terminal 1 — Rozenite dev server** (plugin root):
 
-3. **Start the demo app** with the plugin enabled:
-   ```bash
-   cd demo
-   yarn start
-   # or yarn ios / yarn android / yarn web
-   ```
-   The demo `package.json` already sets `ROZENITE_DEV_MODE=rozenite-zustand-plugin`.  
-   **Use your plugin’s package name here** (from `package.json`), not the placeholder `my-awesome-plugin` from Rozenite’s docs.
+```bash
+yarn dev
+```
 
-4. **Open React Native DevTools** (from the Expo / RN dev menu or browser). You should see a **Zustand** tab in the sidebar.
+Leave this running. It builds and serves the Zustand panel (`src/index.tsx`) so DevTools can load it. When you edit the panel, the dev server rebuilds automatically.
 
-If the tab doesn’t appear, try:
-- Refreshing DevTools (e.g. **Cmd+R** / **Ctrl+R** in the DevTools window).
-- Confirming `yarn dev` is running in the plugin root before opening the app.
-- Running `yarn install` in `demo/` so the plugin is linked (e.g. `"rozenite-zustand-plugin": "file:.."`).
+**Terminal 2 — Demo app** (from `demo/`):
+
+```bash
+cd demo
+yarn start
+# or yarn ios / yarn android / yarn web
+```
+
+The demo already sets `ROZENITE_DEV_MODE=rozenite-zustand-plugin`. Open React Native DevTools (Expo/RN dev menu or browser); you should see a **Zustand** tab.
+
+**After changing the panel** (`src/index.tsx`): refresh DevTools (**Cmd+R** / **Ctrl+R** in the DevTools window) to load the new bundle. You don’t need to restart the Expo app.
+
+### First-time / production
+
+- **Build the plugin** (e.g. before publishing or if not using `yarn dev`):
+  ```bash
+  yarn build
+  ```
+- **Link the plugin in the demo**: run `yarn install` in `demo/` so the `"rozenite-zustand-plugin": "file:.."` dependency is linked.
+
+### Troubleshooting
+
+If the Zustand tab doesn’t appear:
+
+- Refresh DevTools (**Cmd+R** / **Ctrl+R**).
+- Ensure `yarn dev` is running in the plugin root before opening DevTools.
+- Ensure you ran `yarn install` in `demo/` so the plugin is linked.

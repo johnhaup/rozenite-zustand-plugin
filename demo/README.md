@@ -1,24 +1,22 @@
 ## Demo App
 
-#### Development
+### Development
 
-**1. Start the Rozenite dev server first** (so the Zustand panel is available in DevTools):
+**Two terminals:**
 
-```bash
-# from plugin root (parent of demo/)
-yarn dev
-```
+1. **Plugin root** — start the Rozenite dev server (so DevTools can load the Zustand panel):
+   ```bash
+   # from parent folder (plugin root)
+   yarn dev
+   ```
+   Keep this running. It rebuilds the panel when you edit `src/index.tsx`.
 
-Keep this running.
+2. **This folder** — start the Expo app:
+   ```bash
+   yarn start
+   # or yarn android / yarn ios / yarn web
+   ```
 
-**2. Start the Expo app** (from this folder):
+Open React Native DevTools; the **Zustand** tab should appear. **After editing the panel** (`src/index.tsx`), refresh DevTools (**Cmd+R** / **Ctrl+R**) to see changes. No need to restart the app.
 
-```bash
-yarn start
-# or
-yarn android
-yarn ios
-yarn web
-```
-
-The **Zustand** tab should appear in React Native DevTools. If it doesn’t, refresh DevTools (Cmd+R / Ctrl+R).
+See the [main README](../README.md#development-workflow) for full details and troubleshooting.
