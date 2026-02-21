@@ -1,0 +1,31 @@
+---
+description: React coding standards
+alwaysApply: false
+---
+
+## Components
+
+- Named exports (`export function ComponentName`); PascalCase files (`ComponentName.tsx`).
+- Define `Props` (or `interface Props`) above the component; use destructured props.
+- Order: hooks → callbacks → derived (useMemo) → effects → return.
+- Use `StyleSheet.create` at bottom of file.
+- Never use inline functions in the return block; instead use named functions wrapped in `useCallback`.
+
+```tsx
+type Props = { variant?: keyof typeof styles };
+export function StyledText({ variant = "regular", ...rest }: Props) {
+  const isRtl = useIsRtl();
+  const textStyles = useMemo(() => [...], []);
+  return <Animated.Text style={textStyles} {...rest} />;
+}
+const styles = StyleSheet.create({ ... });
+```
+
+## Hooks
+
+- camelCase with `use` prefix (`useExample.ts`) for hook name.
+- File name matches hook name.
+- Define `Props` (or `interface Props`) above the component; use destructured props.
+- Order: hooks → callbacks → derived (useMemo) → effects → return.
+- All returned values should be memoized.
+- A testing file should be nested as a sibling next to the hook file, testing all functionality of the hook. (`useExample.test.ts`)

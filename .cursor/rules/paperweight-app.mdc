@@ -1,0 +1,48 @@
+---
+description: Paperweight coding standards (React Native, Expo, Zustand)
+alwaysApply: true
+---
+
+# Paperweight Standards
+
+**Stack:** React Native 0.79, Expo 53, TypeScript 5.8 (strict), Zustand, expo-router, i18next.
+
+## Imports & Paths
+
+- Use `@/` alias for project modules; avoid deep relative paths.
+- Order: `@/` first, then third-party, then React.
+
+```ts
+import { ColorPalette } from "@/constants/palette";
+import { useIsRtl } from "@/hooks/useIsRtl";
+import { useTranslation } from "react-i18next";
+```
+
+## Exports & File Naming
+
+- **Components:** Named exports (`export function ComponentName`); PascalCase files (`StyledText.tsx`).
+- **Hooks:** camelCase with `use` prefix (`useIsRtl.ts`).
+- **Routes:** kebab-case (`app-category-screen.tsx`); default exports for `app/**` layouts and routes.
+- **Constants:** UPPER_SNAKE_CASE for top-level constants (`MEASUREMENTS`, `ColorPalette`).
+
+## Shared Resources
+
+- **Colors:** `ColorPalette` and `palette` from `@/constants/palette`.
+- **Dimensions:** `MEASUREMENTS` from `@/constants/measurements`.
+- **Fonts:** `getFontFamily(variant)` from `@/utils/fonts`; extend `WIDGET_FONTS_MAP` for widget fonts.
+- **Types:** Shared types in `types/index.ts`; import via `@/types`.
+
+## i18n & RTL
+
+- Add keys to `localization/locales/en.json` first.
+- Prefer `i18nKey` on `StyledText` over manual `t()`.
+- Use `useIsRtl` for layout/alignment; avoid hardcoded `textAlign`.
+
+## State & Errors
+
+- **Zustand:** `create<State>()(persist((set, get) => ({ ... }), { ... }))`; selectors: `useStore((s) => s.field)`.
+- **Errors:** Use `captureError` from `@/services/error` instead of raw `console.error`.
+
+## Types
+
+- Avoid casting; prefer proper typing. No `as` except where third-party APIs require it (e.g. `require()` results).

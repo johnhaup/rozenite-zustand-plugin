@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "RadonAi": {
+      "url": "http://127.0.0.1:52128/mcp",
+      "type": "http",
+      "headers": {
+        "nonce": "c2f4ebb2-5334-4751-8021-694b84a024da"
+      }
+    }
+  }
+}
