@@ -13,17 +13,45 @@ export interface ZustandTracePayload {
   timestamp: number;
 }
 
+export interface ZustandStoreSnapshot {
+  storeName?: string;
+  state: unknown;
+}
+
+export interface ZustandStoresSnapshotPayload {
+  stores: ZustandStoreSnapshot[];
+}
+
+/** Payload for panel -> app: request current list of stores (no payload needed). */
+export interface RequestStoresSnapshotPayload {
+  _?: never;
+}
+
 interface PluginEvents extends Record<string, unknown> {
+  "request-stores-snapshot": RequestStoresSnapshotPayload;
   "zustand-trace": ZustandTracePayload;
+  "zustand-stores-snapshot": ZustandStoresSnapshotPayload;
 }
 
 // Client is set when the plugin connects; middleware uses it to send traces.
 let pluginClient: RozeniteDevToolsClient<PluginEvents> | null = null;
 
+// Registry of stores created with withRozenite (so we can send snapshot when DevTools connect).
+const storeRegistry: Array<{ storeName: string | undefined; getState: () => unknown }> = [];
+
 function sendTrace(payload: ZustandTracePayload): void {
   if (pluginClient) {
     pluginClient.send("zustand-trace", payload);
   }
+}
+
+function sendStoresSnapshot(): void {
+  if (!pluginClient) return;
+  const stores: ZustandStoreSnapshot[] = storeRegistry.map((r) => ({
+    storeName: r.storeName,
+    state: r.getState(),
+  }));
+  pluginClient.send("zustand-stores-snapshot", { stores });
 }
 
 // Infer action name from stack when not provided (same idea as zustand/devtools).
@@ -96,6 +124,8 @@ export function withRozenite<T extends object>(
 
       const initial = f(wrappedSet, get, store);
 
+      storeRegistry.push({ storeName, getState: () => store.getState() });
+
       // Expose 3-arg setState on the store so callers can pass action names
       const originalSetState = store.setState;
       store.setState = ((partial: T | Partial<T> | ((s: T) => T | Partial<T>), replace?: boolean, actionArg?: ZustandAction) => {
@@ -128,4 +158,8 @@ export default function setupPlugin(
   client: RozeniteDevToolsClient<PluginEvents>
 ): void {
   pluginClient = client;
+  sendStoresSnapshot();
+  client.onMessage("request-stores-snapshot", () => {
+    sendStoresSnapshot();
+  });
 }
